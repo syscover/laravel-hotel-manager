@@ -1,0 +1,20 @@
+{
+    "name": "syscover/hotel-manager",
+    "description": "Hotel Manager package",
+    "keywords": ["syscover","pulsar","laravel","hotelmanager"],
+    "authors": [
+        {
+            "name": "SYSCOVER SL",
+            "email": "info@syscover.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Syscover\\HotelManager\\": "src/Syscover/HotelManager"
+        }
+    },
+    "minimum-stability": "dev"
+}
