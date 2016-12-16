@@ -7,6 +7,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'api'           => env('FACTURADIRECTA_API_KEY', 'your api key'),
-    'accountName'   => env('FACTURADIRECTA_ACCOUNT_NAME', 'your account name'),
+    'url'           => env('HOTELMANAGER_URL', 'your url'),
+    'token'         => env('HOTELMANAGER_TOKEN', 'your token'),
+    'password'      => env('HOTELMANAGER_PASSWORD', 'your password'),
 ];

@@ -1,6 +1,7 @@
 <?php namespace Syscover\HotelManager;
 
 use Illuminate\Support\ServiceProvider;
+use Syscover\FacturaDirecta\Libraries\HotelManagerLibrary;
 
 class HotelManagerServiceProvider extends ServiceProvider
 {
@@ -17,7 +18,7 @@ class HotelManagerServiceProvider extends ServiceProvider
 
 		// register config files
 		$this->publishes([
-            __DIR__ . '/../../config/hotelManager.php' 			=> config_path('hotelManager.php')
+            __DIR__ . '/../../config/hotelManager.php' => config_path('hotelManager.php')
         ]);
 	}
 
@@ -28,6 +29,9 @@ class HotelManagerServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-        //
+        $this->app->bind('HotelManager', function($app)
+        {
+            return new HotelManagerLibrary($app);
+        });
 	}
 }
