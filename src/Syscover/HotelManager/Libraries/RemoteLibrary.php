@@ -12,9 +12,10 @@ class RemoteLibrary
         $curl = curl_init();
 
         curl_setopt($curl, CURLOPT_URL,                     $curlParams['url']);
+
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,          isset($curlParams['returnTransfer'])? $curlParams['returnTransfer'] : false);
         curl_setopt($curl, CURLOPT_TIMEOUT,                 isset($curlParams['timeout'])? $curlParams['timeout'] : 10);
-        
+
         if(isset($curlParams['followLocation']))
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION,      $curlParams['followLocation']);
 
@@ -26,6 +27,9 @@ class RemoteLibrary
 
         if(isset($curlParams['sslVerifyPeer']))
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER,      $curlParams['sslVerifyPeer']);
+
+        if(isset($curlParams['sslVerifyHost']))
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST,      $curlParams['sslVerifyHost']);
 
         if(isset($curlParams['httpAuth']))
         {

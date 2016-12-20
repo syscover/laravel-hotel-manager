@@ -1,4 +1,4 @@
-<?php namespace Syscover\FacturaDirecta\Libraries;
+<?php namespace Syscover\HotelManager\Libraries;
 
 class HotelManagerLibrary
 {
@@ -6,28 +6,25 @@ class HotelManagerLibrary
     {
         $url = config('hotelManager.url');
 
-        // set params in url
-        $i = 0;
+        // set params
+        $stringParams='';
         foreach($params as $key => $value)
         {
-            if($i === 0)
-                $url .= '?';
-            else
-                $url .= '&';
-
-            $url .= $key . '=' .  urlencode($value);
-            $i++;
+            $stringParams .= $key . '=' .  urlencode($value) . '&';
         }
+        $stringParams = rtrim($stringParams,'&');
 
         $curlParams = [
             'url'               => $url,
-            //'httpAuth'          => config('facturaDirecta.api') . ':x',
             'followLocation'    => false,
+            'post'              => true,
+            'sslVerifyPeer'     => false,
+            'sslVerifyHost'     => false,
             'returnTransfer'    => true,
             'timeout'           => 30
         ];
 
-        $response = RemoteLibrary::send($curlParams);
+        $response = RemoteLibrary::send($curlParams, $stringParams);
 
         return $response;
     }
