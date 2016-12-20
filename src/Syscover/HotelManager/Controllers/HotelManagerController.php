@@ -15,7 +15,7 @@ class HotelManagerController extends BaseController
     {
         $response = HotelManager::checkAvailability($request->all());
 
-        return response()
-            ->json($response);
+        return response($response, 200)
+            ->header('Content-Type', 'application/json');
     }
 }
