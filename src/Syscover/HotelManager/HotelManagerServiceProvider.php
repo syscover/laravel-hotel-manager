@@ -1,7 +1,7 @@
 <?php namespace Syscover\HotelManager;
 
 use Illuminate\Support\ServiceProvider;
-use Syscover\FacturaDirecta\Libraries\HotelManagerLibrary;
+use Syscover\HotelManager\Libraries\HotelManagerLibrary;
 
 class HotelManagerServiceProvider extends ServiceProvider
 {
