@@ -55,7 +55,17 @@ class RemoteService
         $stringParameters = '';
         foreach($parameters as $key => $value)
         {
-            $stringParameters .= $key . '=' .  urlencode($value) . '&';
+            if(is_array($value))
+            {
+                foreach ($value as $arrayValue)
+                {
+                    $stringParameters .= urlencode($key . '[]') . '=' .  urlencode($arrayValue) . '&';
+                }
+            }
+            else
+            {
+                $stringParameters .= urlencode($key) . '=' .  urlencode($value) . '&';
+            }
         }
 
         return rtrim($stringParameters, '&');
