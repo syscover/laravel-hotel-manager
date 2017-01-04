@@ -6,7 +6,7 @@
 
 **1 - After install Laravel framework, insert on file composer.json, inside require object this value**
 ```
-"syscover/hotel-manage": "~2.0"
+"syscover/laravel-hotel-manage": "~2.0"
 ```
 and execute on console:
 ```
@@ -20,7 +20,7 @@ Syscover\HotelManager\HotelManagerServiceProvider::class,
 
 **3 - Execute publish command**
 ```
-php artisan vendor:publish
+php artisan vendor:publish --provider="Syscover\HotelManager\HotelManagerServiceProviderr"
 ```
 
 ##Configuration
