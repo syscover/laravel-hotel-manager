@@ -4,10 +4,10 @@ class RemoteService
 {
     /**
      * @param $curlParams
-     * @param $params
+     * @param $parameters
      * @return mixed
      */
-    public static function send($curlParams, $params = null)
+    public static function send($curlParams, $parameters = null)
     {
         $curl = curl_init();
 
@@ -40,13 +40,24 @@ class RemoteService
         if(isset($curlParams['headers']))
             curl_setopt($curl, CURLOPT_HTTPHEADER,          $curlParams['headers']);
 
-        if(isset($params))
-            curl_setopt($curl, CURLOPT_POSTFIELDS,          $params);
+        if(isset($parameters))
+            curl_setopt($curl, CURLOPT_POSTFIELDS,          $parameters);
 
         $response = curl_exec($curl);
 
         curl_close($curl);
 
         return $response;
+    }
+
+    public static function formatParameters(array $parameters)
+    {
+        $stringParameters = '';
+        foreach($parameters as $key => $value)
+        {
+            $stringParameters .= $key . '=' .  urlencode($value) . '&';
+        }
+
+        return rtrim($stringParameters, '&');
     }
 }
