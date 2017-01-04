@@ -1,6 +1,6 @@
-<?php namespace Syscover\HotelManager\Libraries;
+<?php namespace Syscover\HotelManager\Services;
 
-class RemoteLibrary
+class RemoteService
 {
     /**
      * @param $curlParams

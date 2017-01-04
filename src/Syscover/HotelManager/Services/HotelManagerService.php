@@ -1,12 +1,12 @@
-<?php namespace Syscover\HotelManager\Libraries;
+<?php namespace Syscover\HotelManager\Services;
 
-class HotelManagerLibrary
+class HotelManagerService
 {
     public static function checkAvailability($params = [])
     {
         $url = config('hotelManager.url');
 
-        // set params
+        // set paramsLibraries
         $stringParams='';
         foreach($params as $key => $value)
         {

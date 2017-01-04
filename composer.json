@@ -1,7 +1,7 @@
 {
-    "name": "syscover/hotel-manager",
+    "name": "syscover/laravel-hotel-manager",
     "description": "Hotel Manager package",
-    "keywords": ["syscover","pulsar","laravel","hotelmanager"],
+    "keywords": ["syscover","pulsar","laravel","hotel manager"],
     "authors": [
         {
             "name": "SYSCOVER SL",

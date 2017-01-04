@@ -1,7 +1,7 @@
 <?php namespace Syscover\HotelManager;
 
 use Illuminate\Support\ServiceProvider;
-use Syscover\HotelManager\Libraries\HotelManagerLibrary;
+use Syscover\HotelManager\Services\HotelManagerService;
 
 class HotelManagerServiceProvider extends ServiceProvider
 {
@@ -31,7 +31,7 @@ class HotelManagerServiceProvider extends ServiceProvider
 	{
         $this->app->bind('HotelManager', function($app)
         {
-            return new HotelManagerLibrary($app);
+            return new HotelManagerService($app);
         });
 	}
 }
