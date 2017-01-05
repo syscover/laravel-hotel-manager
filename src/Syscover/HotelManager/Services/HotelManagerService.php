@@ -60,7 +60,45 @@ class HotelManagerService
             'timeout'           => 30
         ];
 
-        $response = RemoteService::send($curlParams, $stringParameters);
+        $auxResponse    = RemoteService::send($curlParams, $stringParameters);
+        $auxResponse    = json_decode($auxResponse);
+        $response       = [];
+
+        foreach ($auxResponse as $obj)
+        {
+            $hotel = [
+                'id'    => $obj->hotel->id_hotel,
+                'rooms' => []
+            ];
+            $hasCurrency = false;
+
+            $i = 1;
+            while(isset($obj->hotel->{$i}))
+            {
+                $hotel['rooms'][] = (object)[
+                    'id'        => $obj->hotel->{$i}->habitacion->idHabitacion,
+                    'name'      => $obj->hotel->{$i}->habitacion->infoHabitacion->nombreHabitacion,
+                    'quantity'  => $obj->hotel->{$i}->habitacion->disponibilidad,
+                    'rates'     => (object)[
+                        'rate'                      => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa,
+                        'rack'                      => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_rack,
+                        'rackAvg'                   => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_rack_promedio,
+                        'hasNotRefundable'          => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_noreembolsable_valida == 1? true : false,
+                        'notRefundablePercentage'   => $obj->hotel->{$i}->habitacion->infoHabitacion->valor_noreembolsable_valida,
+                        'notRefundableRate'         => null,
+
+                        'notRefundableRack'         => $obj->hotel->{$i}->habitacion->infoHabitacion->tfa_noreembolsable,
+                        'notRefundableRackAvg'      => $obj->hotel->{$i}->habitacion->infoHabitacion->tfa_prom_noche_no_reembolsable,
+
+                        'rateRound'                 => $obj->hotel->{$i}->habitacion->infoHabitacion->tfa_total_estadia,
+                        'rateAvgRound'              => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_promedio_noche,
+                    ]
+                ];
+                $i++;
+            }
+
+            $response['hotels'][] = (object)$hotel;
+        }
 
         return $response;
     }
