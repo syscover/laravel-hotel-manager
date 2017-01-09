@@ -1,12 +1,12 @@
 # Hotel Manager to Laravel 5.3
 
-[![Total Downloads](https://poser.pugx.org/syscover/hotel-manager/downloads)](https://packagist.org/packages/syscover/hotel-manager)
+[![Total Downloads](https://poser.pugx.org/syscover/laravel-hotel-manager/downloads)](https://packagist.org/packages/syscover/laravel-hotel-manager)
 
 ## Installation
 
 **1 - After install Laravel framework, insert on file composer.json, inside require object this value**
 ```
-"syscover/laravel-hotel-manage": "~2.0"
+"syscover/laravel-hotel-manager": "~2.0"
 ```
 and execute on console:
 ```
