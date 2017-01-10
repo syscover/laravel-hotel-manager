@@ -28,7 +28,6 @@ Set config options on config\hotelManager.php
 The best option is set options in environment file, with this example
 ```
 HOTELMANAGER_URL=https://xxxxxx
-HOTELMANAGER_TOKEN=xxxxxxxxx
 HOTELMANAGER_USER=xxxxxxxxx
 HOTELMANAGER_PASSWORD=xxxxxxxxx
 ```
