@@ -172,9 +172,9 @@ class HotelManagerService
             'timeout'           => 30
         ];
 
-        $response                       = [];
         $auxResponse                    = RemoteService::send($curlParams, $stringParameters);
         $auxResponse                    = json_decode($auxResponse);
+        $response                       = [];
         $response['transaction']        = (object)[
             'id' => $auxResponse->ID_Tansaccion
         ];
@@ -183,14 +183,59 @@ class HotelManagerService
     }
 
     /**
-     * @param array $parameters
-     * @return mixed
+     * @param   array $parameters
+     * @throws  ParameterNotFoundException
      */
     public static function closeTransaction(array $parameters = [])
     {
         $url                    = config('hotelManager.url');
         $parameters['action']   = 'realizar_reserva';
         $parameters['token']    = HotelManagerService::getToken();
+
+        if(! isset($parameters['checkInDate']))
+            throw new ParameterNotFoundException('CheckInDate parameter not found in parameters array, please set checkInDate index');
+
+        if(! isset($parameters['checkOutDate']))
+            throw new ParameterNotFoundException('CheckOutDate parameter not found in parameters array, please set checkOutDate index');
+
+        if(! isset($parameters['numberRooms']))
+            throw new ParameterNotFoundException('NumberRooms parameter not found in parameters array, please set numberRooms index');
+
+
+        // change numberRooms by cantidad
+        $parameters['nombre'] = $parameters['name'];
+        unset($parameters['name']);
+
+        $parameters['apellido'] = $parameters['surname'];
+        unset($parameters['surname']);
+
+        $parameters['telefono'] = $parameters['phone'];
+        unset($parameters['phone']);
+
+        $parameters['docNum'] = $parameters['docNumber'];
+        unset($parameters['docNumber']);
+
+        $parameters['observaciones'] = $parameters['observations'];
+        unset($parameters['observations']);
+
+        $parameters['pais'] = $parameters['country'];
+        unset($parameters['country']);
+
+        $parameters['medioPagoID'] = $parameters['payment'];
+        unset($parameters['payment']);
+
+        $parameters['titularTarjeta'] = $parameters['creditCardHolder'];
+        unset($parameters['creditCardHolder']);
+
+        $parameters['numTarjeta'] = $parameters['creditCard'];
+        unset($parameters['creditCard']);
+
+        $parameters['codSeguridad'] = $parameters['cvv'];
+        unset($parameters['cvv']);
+
+        $parameters['IDTransaccion'] = $parameters['transaction'];
+        unset($parameters['transaction']);
+
         $stringParameters       = RemoteService::formatParameters($parameters);
 
         $curlParams = [
@@ -203,7 +248,13 @@ class HotelManagerService
             'timeout'           => 30
         ];
 
-        $response = RemoteService::send($curlParams, $stringParameters);
+        $auxResponse                = RemoteService::send($curlParams, $stringParameters);
+        $auxResponse                = json_decode($auxResponse);
+        $response                   = [];
+//        $response['booking']        = (object)[
+//            'id'    => $auxResponse->0->IDReserva,
+//            'key'   => $auxResponse->claveUnicaReserva":,
+//        ];
 
         return $response;
     }
