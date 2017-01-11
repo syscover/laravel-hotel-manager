@@ -186,6 +186,11 @@ class HotelManagerService
      * @param   array $parameters
      * @throws  ParameterNotFoundException
      */
+    /**
+     * @param   array $parameters
+     * @return  array
+     * @throws  ParameterNotFoundException
+     */
     public static function closeTransaction(array $parameters = [])
     {
         $url                    = config('hotelManager.url');
@@ -201,8 +206,14 @@ class HotelManagerService
         if(! isset($parameters['numberRooms']))
             throw new ParameterNotFoundException('NumberRooms parameter not found in parameters array, please set numberRooms index');
 
+        if(! isset($parameters['numberAdults']))
+            throw new ParameterNotFoundException('NumberAdults parameter not found in parameters array, please set numberAdults index');
+
 
         // change numberRooms by cantidad
+        $parameters['numAdults'] = $parameters['numberAdults'];
+        unset($parameters['numberAdults']);
+
         $parameters['nombre'] = $parameters['name'];
         unset($parameters['name']);
 
