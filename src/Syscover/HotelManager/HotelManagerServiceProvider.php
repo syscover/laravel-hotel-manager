@@ -16,6 +16,9 @@ class HotelManagerServiceProvider extends ServiceProvider
 		if (!$this->app->routesAreCached())
 			require __DIR__ . '/../../routes.php';
 
+        // register translations
+        $this->loadTranslationsFrom(__DIR__ . '/../../lang', 'hotelManager');
+
 		// register config files
 		$this->publishes([
             __DIR__ . '/../../config/hotelManager.php' => config_path('hotelManager.php')
