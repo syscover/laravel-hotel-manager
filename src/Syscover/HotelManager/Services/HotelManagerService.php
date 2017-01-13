@@ -210,10 +210,6 @@ class HotelManagerService
         if(! isset($parameters['numberAdults']))
             throw new ParameterNotFoundException('NumberAdults parameter not found in parameters array, please set numberAdults index');
 
-        $parameters['numAdults'] = $parameters['numberAdults'];
-        unset($parameters['numberAdults']);
-
-
         if(isset($parameters['checkInHour']))
         {
             $parameters['horaLlegada'] = $parameters['checkInHour'];
@@ -307,7 +303,7 @@ class HotelManagerService
         if(! isset($parameters['transactionId']))
             throw new ParameterNotFoundException('TransactionId parameter not found in parameters array, please set transactionId index');
 
-        $parameters['IDTransaccion'] = $parameters['transactionId'];
+        $parameters['IDtransaccion'] = $parameters['transactionId'];
         unset($parameters['transactionId']);
 
         $stringParameters       = RemoteService::formatParameters($parameters);
@@ -325,14 +321,11 @@ class HotelManagerService
         $auxResponse                = RemoteService::send($curlParams, $stringParameters);
         $auxResponse                = json_decode($auxResponse);
 
-
-        dd($auxResponse);
-
         $response                   = [];
-//        $response['booking']        = (object)[
-//            'id'    => $auxResponse->0->IDReserva,
-//            'key'   => $auxResponse->claveUnicaReserva":,
-//        ];
+        $response['booking']        = (object)[
+            'id'    => array_first((array)$auxResponse->IDReserva),
+            'key'   => array_first((array)$auxResponse->claveUnicaReserva)
+        ];
 
         return $response;
     }
