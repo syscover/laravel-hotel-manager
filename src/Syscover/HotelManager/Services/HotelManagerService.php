@@ -115,7 +115,6 @@ class HotelManagerService
                         'rateAvgRound'              => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_promedio_noche,
                     ]
                 ];
-                $i++;
 
                 if(! $setCurrency)
                 {
@@ -125,6 +124,8 @@ class HotelManagerService
                     ];
                     $setCurrency = true;
                 }
+                
+                $i++;
             }
 
             $response['hotels'][] = (object)$hotel;
