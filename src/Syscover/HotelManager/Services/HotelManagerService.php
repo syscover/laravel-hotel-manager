@@ -124,7 +124,7 @@ class HotelManagerService
                     ];
                     $setCurrency = true;
                 }
-                
+
                 $i++;
             }
 
