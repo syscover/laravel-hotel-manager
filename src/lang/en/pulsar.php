@@ -10,6 +10,6 @@ return [
 
     'visa'                                  => 'Visa',
     'american_express'                      => 'American Express',
-    'master_card'                           => 'Master Cars',
+    'master_card'                           => 'Master Card',
     'bank_deposit'                          => 'Bank Deposit',
 ];
