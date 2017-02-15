@@ -1,4 +1,4 @@
-# Hotel Manager to Laravel 5.3
+# Hotel Manager to Laravel 5.4
 
 <a href="https://packagist.org/packages/syscover/laravel-hotel-manager"><img src="https://poser.pugx.org/syscover/laravel-hotel-manager/downloads" alt="Total Downloads"></a>
 

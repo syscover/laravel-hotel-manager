@@ -102,6 +102,22 @@ class HotelManagerService
             $i = 1;
             while(isset($obj->hotel->{$i}))
             {
+                // get additions to room
+                $additions = [];
+                if(isset($obj->hotel->{$i}->habitacion->Pensiones))
+                {
+                    foreach ($obj->hotel->{$i}->habitacion->Pensiones as $addition)
+                    {
+                        $additions[] = (object)[
+                            'id'            => $addition->idPension,
+                            'name'          => $addition->infoPension->nombre,
+                            'adultRate'     => $addition->infoPension->tarifa_adulto,
+                            'childrenRate'  => $addition->infoPension->tarifa_nino,
+                        ];
+                    }
+                }
+
+                // create room
                 $hotel['rooms'][] = (object)[
                     'id'                    => $obj->hotel->{$i}->habitacion->idHabitacion,
                     'name'                  => $obj->hotel->{$i}->habitacion->infoHabitacion->nombreHabitacion,
@@ -109,11 +125,16 @@ class HotelManagerService
                     'rates'                 => (object)[
                         'isNotRefundableRate'       => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_noreembolsable_valida == 1? true : false,
                         'notRefundablePercentage'   => $obj->hotel->{$i}->habitacion->infoHabitacion->valor_noreembolsable_valida,
-                        'rate'                      => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa,
-                        'rateRound'                 => $obj->hotel->{$i}->habitacion->infoHabitacion->tfa_total_estadia,
-                        'rateAvg'                   => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_rack_promedio,
-                        'rateAvgRound'              => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_promedio_noche,
-                    ]
+
+                        // Standard rate
+                        'rate'                      => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_rack,                          // tarifa base
+                        'rateAvg'                   => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_rack_promedio,                 // tarifa promedio por noche
+
+                        // Non refundable rate
+                        'rateNonRefundable'         => $obj->hotel->{$i}->habitacion->infoHabitacion->tfa_noreembolsable,                   // tarifa base no reembolsable
+                        'rateAvgNonRefundable'      => $obj->hotel->{$i}->habitacion->infoHabitacion->tfa_prom_noche_no_reembolsable,       // tarifa promedio por noche no reembolsable
+                    ],
+                    'additions'             => $additions
                 ];
 
                 if(! $setCurrency)
