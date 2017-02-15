@@ -123,7 +123,7 @@ class HotelManagerService
                     'name'                  => $obj->hotel->{$i}->habitacion->infoHabitacion->nombreHabitacion,
                     'quantity'              => $obj->hotel->{$i}->habitacion->disponibilidad,
                     'rates'                 => (object)[
-                        'hasNonRefundableRate'              => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_noreembolsable_valida == 1? true : false,
+                        'hasNonRefundableRate'              => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_noreembolsable_valida == 1? true : false, // has non refundable rate
                         'nonRefundablePercentageDiscount'   => $obj->hotel->{$i}->habitacion->infoHabitacion->valor_noreembolsable_valida,
 
                         // Standard rate
