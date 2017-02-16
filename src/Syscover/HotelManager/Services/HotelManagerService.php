@@ -39,10 +39,12 @@ class HotelManagerService
         throw new \Exception('Token ID is not valid, please verify your username and password');
     }
 
+
     /**
-     * @param array $parameters
-     * @throws ParameterNotFoundException
-     * @throws ParameterValueException
+     * @param   array $parameters
+     * @return  array
+     * @throws  ParameterNotFoundException
+     * @throws  ParameterValueException
      */
     public static function getConditions(array $parameters = [])
     {
@@ -81,8 +83,19 @@ class HotelManagerService
         $auxResponse            = json_decode($auxResponse);
         $response               = [];
 
+        if(isset($auxResponse->politicas) && is_array($auxResponse->politicas))
+        {
+            foreach ($auxResponse->politicas as $condition)
+            {
+                $response['conditions'][] = (object)[
+                    'id'            => $condition->id,
+                    'name'          => $condition->name,
+                    'description'   => $condition->description
+                ];
+            }
+        }
 
-
+        return $response;
     }
 
 
