@@ -39,7 +39,12 @@ class HotelManagerService
         throw new \Exception('Token ID is not valid, please verify your username and password');
     }
 
-    public static function getConditions()
+    /**
+     * @param array $parameters
+     * @throws ParameterNotFoundException
+     * @throws ParameterValueException
+     */
+    public static function getConditions(array $parameters = [])
     {
         $url                    = config('hotelManager.url');
         $parameters['action']   = 'obtenerPoliticaHotelDeDetalles';
@@ -55,7 +60,7 @@ class HotelManagerService
         if(! isset($parameters['isRefundableRate']))
             throw new ParameterNotFoundException('IsRefundableRate parameter not found in parameters array, please set isRefundableRate index');
 
-        if($parameters['isRefundableRate'] !== 0 || $parameters['isRefundableRate'] !== "0" || $parameters['isRefundableRate'] !== 1 || $parameters['isRefundableRate'] !== "1")
+        if(! in_array($parameters['isRefundableRate'], [0,'0',1,'1']))
             throw new ParameterValueException('IsRefundableRate parameter has a incorrect value, must to be 1 or 0');
 
         $parameters['non_refundable'] = ($parameters['isRefundableRate'] === 0 || $parameters['isRefundableRate'] === "0")? 0 : 1;
@@ -75,6 +80,8 @@ class HotelManagerService
         $auxResponse            = RemoteService::send($curlParams, $stringParameters);
         $auxResponse            = json_decode($auxResponse);
         $response               = [];
+
+
 
     }
 
