@@ -1,5 +1,6 @@
 <?php namespace Syscover\HotelManager\Services;
 
+use Syscover\HotelManager\Exceptions\CloseTransactionException;
 use Syscover\HotelManager\Exceptions\ParameterFormatException;
 use Syscover\HotelManager\Exceptions\ParameterNotFoundException;
 use Syscover\HotelManager\Exceptions\ParameterValueException;
@@ -36,6 +37,45 @@ class HotelManagerService
         }
 
         throw new \Exception('Token ID is not valid, please verify your username and password');
+    }
+
+    public static function getConditions()
+    {
+        $url                    = config('hotelManager.url');
+        $parameters['action']   = 'obtenerPoliticaHotelDeDetalles';
+        $parameters['token']    = HotelManagerService::getToken();
+
+        // check parameters
+        if(! isset($parameters['lang']))
+            throw new ParameterNotFoundException('Lang parameter not found in parameters array, please set lang index');
+
+        if(! isset($parameters['hotelId']))
+            throw new ParameterNotFoundException('HotelId parameter not found in parameters array, please set hotelId index');
+
+        if(! isset($parameters['isRefundableRate']))
+            throw new ParameterNotFoundException('IsRefundableRate parameter not found in parameters array, please set isRefundableRate index');
+
+        if($parameters['isRefundableRate'] !== 0 || $parameters['isRefundableRate'] !== "0" || $parameters['isRefundableRate'] !== 1 || $parameters['isRefundableRate'] !== "1")
+            throw new ParameterValueException('IsRefundableRate parameter has a incorrect value, must to be 1 or 0');
+
+        $parameters['non_refundable'] = ($parameters['isRefundableRate'] === 0 || $parameters['isRefundableRate'] === "0")? 0 : 1;
+
+        $stringParameters       = RemoteService::formatParameters($parameters);
+
+        $curlParams = [
+            'url'               => $url,
+            'followLocation'    => false,
+            'post'              => true,
+            'sslVerifyPeer'     => false,
+            'sslVerifyHost'     => false,
+            'returnTransfer'    => true,
+            'timeout'           => 30
+        ];
+
+        $auxResponse            = RemoteService::send($curlParams, $stringParameters);
+        $auxResponse            = json_decode($auxResponse);
+        $response               = [];
+
     }
 
 
@@ -208,6 +248,7 @@ class HotelManagerService
     /**
      * @param   array $parameters
      * @return  array
+     * @throws  CloseTransactionException
      * @throws  ParameterNotFoundException
      * @throws  ParameterValueException
      */
@@ -217,111 +258,172 @@ class HotelManagerService
         $parameters['action']   = 'realizar_reserva';
         $parameters['token']    = HotelManagerService::getToken();
 
+
+        // lang
         if(! isset($parameters['lang']))
             throw new ParameterNotFoundException('Lang parameter not found in parameters array, please set lang index');
 
+
+        // checkInDate
         if(! isset($parameters['checkInDate']))
             throw new ParameterNotFoundException('CheckInDate parameter not found in parameters array, please set checkInDate index');
 
+
+        // checkOutDate
         if(! isset($parameters['checkOutDate']))
             throw new ParameterNotFoundException('CheckOutDate parameter not found in parameters array, please set checkOutDate index');
 
+
+        // numberRooms
         if(! isset($parameters['numberRooms']))
             throw new ParameterNotFoundException('NumberRooms parameter not found in parameters array, please set numberRooms index');
 
+
+        // numberAdults
         if(! isset($parameters['numberAdults']))
             throw new ParameterNotFoundException('NumberAdults parameter not found in parameters array, please set numberAdults index');
 
+
+        // checkInHour
         if(isset($parameters['checkInHour']))
         {
             $parameters['horaLlegada'] = $parameters['checkInHour'];
             unset($parameters['checkInHour']);
         }
 
+
+        // checkInMinute
         if(isset($parameters['checkInMinute']))
         {
             $parameters['minutoLlegada'] = $parameters['checkInMinute'];
             unset($parameters['checkInMinute']);
         }
 
+
+        // name
         if(! isset($parameters['name']))
             throw new ParameterNotFoundException('Name parameter not found in parameters array, please set name index');
 
         $parameters['nombre'] = $parameters['name'];
         unset($parameters['name']);
 
+
+        // surname
         if(! isset($parameters['surname']))
             throw new ParameterNotFoundException('Surname parameter not found in parameters array, please set surname index');
 
         $parameters['apellido'] = $parameters['surname'];
         unset($parameters['surname']);
 
+
+        // phone
         if(! isset($parameters['phone']))
             throw new ParameterNotFoundException('Phone parameter not found in parameters array, please set phone index');
 
         $parameters['telefono'] = $parameters['phone'];
         unset($parameters['phone']);
 
+
+        // email
         if(! isset($parameters['email']))
             throw new ParameterNotFoundException('Email parameter not found in parameters array, please set email index');
 
+
+        // docType
         if(! isset($parameters['docType']))
             throw new ParameterNotFoundException('DocType parameter not found in parameters array, please set docType index');
 
         if(! in_array($parameters['docType'], array_pluck(config('hotelManager.docTypes'), 'id')))
             throw new ParameterValueException('DocType has value not allowed, please check allow values and set correct value');
 
+
+        // docNumber
         if(! isset($parameters['docNumber']))
             throw new ParameterNotFoundException('DocNumber parameter not found in parameters array, please set docNumber index');
 
         $parameters['docNum'] = $parameters['docNumber'];
         unset($parameters['docNumber']);
 
+
+        // observations
         if(isset($parameters['observations']))
         {
             $parameters['aclaraciones'] = $parameters['observations'];
             unset($parameters['observations']);
         }
 
+
+        // country
         if(isset($parameters['country']))
         {
             $parameters['pais'] = $parameters['country'];
             unset($parameters['country']);
         }
 
+
+        // paymentMethod
         if(! isset($parameters['paymentMethod']))
             throw new ParameterNotFoundException('PaymentMethod parameter not found in parameters array, please set paymentMethod index');
 
         $parameters['medioPagoID'] = $parameters['paymentMethod'];
         unset($parameters['paymentMethod']);
 
+
+        // creditCardHolder
         if(! isset($parameters['creditCardHolder']))
             throw new ParameterNotFoundException('CreditCardHolder parameter not found in parameters array, please set creditCardHolder index');
 
         $parameters['titularTarjeta'] = $parameters['creditCardHolder'];
         unset($parameters['creditCardHolder']);
 
+
+        // creditCardNumber
         if(! isset($parameters['creditCardNumber']))
             throw new ParameterNotFoundException('CreditCardNumber parameter not found in parameters array, please set creditCardNumber index');
 
         $parameters['numTarjeta'] = $parameters['creditCardNumber'];
         unset($parameters['creditCardNumber']);
 
+
+        // creditCardDateExpiry
         if(! isset($parameters['creditCardDateExpiry']))
             throw new ParameterNotFoundException('CreditCardDateExpiry parameter not found in parameters array, please set creditCardDateExpiry index');
 
         if(strlen($parameters['creditCardDateExpiry']) != 4)
             throw new ParameterValueException('CreditCardDateExpiry has length value not allowed. Please check allow values and set correct value');
 
+
+        // fechaVto
         $parameters['fechaVto'] = $parameters['creditCardDateExpiry'];
         unset($parameters['creditCardDateExpiry']);
 
+
+        // cvv
         if(! isset($parameters['cvv']))
             throw new ParameterNotFoundException('Cvv parameter not found in parameters array, please set cvv index');
 
         $parameters['codSeguridad'] = $parameters['cvv'];
         unset($parameters['cvv']);
 
+
+        // isRefundableRate
+        if(! isset($parameters['isRefundableRate']))
+            throw new ParameterNotFoundException('IsRefundableRate parameter not found in parameters array, please set isRefundableRate index');
+
+        if(! in_array($parameters['isRefundableRate'], [0,'0',1,'1']))
+            throw new ParameterValueException('IsRefundableRate parameter has a incorrect value, must to be 1 or 0');
+
+        $parameters['reembolsable'] = $parameters['isRefundableRate'];
+
+
+        // additionId
+        if(isset($parameters['additionId']))
+            $parameters['idPension'] = $parameters['additionId'];
+        else
+            $parameters['idPension'] = null;
+
+
+        // transactionId
         if(! isset($parameters['transactionId']))
             throw new ParameterNotFoundException('TransactionId parameter not found in parameters array, please set transactionId index');
 
@@ -340,14 +442,25 @@ class HotelManagerService
             'timeout'           => 30
         ];
 
-        $auxResponse                = RemoteService::send($curlParams, $stringParameters);
-        $auxResponse                = json_decode($auxResponse);
+        $auxResponse            = RemoteService::send($curlParams, $stringParameters);
+        $auxResponse            = json_decode($auxResponse);
 
-        $response                   = [];
-        $response['booking']        = (object)[
-            'id'    => array_first((array)$auxResponse->IDReserva),
-            'key'   => array_first((array)$auxResponse->claveUnicaReserva)
-        ];
+        if(isset($auxResponse->IDReserva) && isset($auxResponse->claveUnicaReserva))
+        {
+            $response                   = [];
+            $response['booking']        = (object)[
+                'id'    => array_first((array)$auxResponse->IDReserva),
+                'key'   => array_first((array)$auxResponse->claveUnicaReserva)
+            ];
+        }
+        elseif(isset($auxResponse->codigo) && isset($auxResponse->desc_error))
+        {
+            throw new CloseTransactionException('Error code: ' . $auxResponse->codigo . ' to close transaction, Error: ' . $auxResponse->desc_error);
+        }
+        else
+        {
+            throw new CloseTransactionException('Unknown error to close transaction');
+        }
 
         return $response;
     }
