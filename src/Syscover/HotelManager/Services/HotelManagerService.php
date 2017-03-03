@@ -182,6 +182,12 @@ class HotelManagerService
                     'id'                    => $obj->hotel->{$i}->habitacion->idHabitacion,
                     'name'                  => $obj->hotel->{$i}->habitacion->infoHabitacion->nombreHabitacion,
                     'quantity'              => $obj->hotel->{$i}->habitacion->disponibilidad,
+                    'capacities'            => (object)[
+                        'minimum'   => $obj->hotel->{$i}->habitacion->capacidadMinima,
+                        'maximum'   => $obj->hotel->{$i}->habitacion->capacidadMaximaTotal,
+                        'adults'    => $obj->hotel->{$i}->habitacion->capacidadMaximaAdultos,
+                        'children'  => $obj->hotel->{$i}->habitacion->capacidadMaximaNinos
+                    ],
                     'rates'                 => (object)[
                         'hasNonRefundableRate'              => $obj->hotel->{$i}->habitacion->infoHabitacion->tarifa_noreembolsable_valida == 1? true : false, // has non refundable rate
                         'nonRefundablePercentageDiscount'   => $obj->hotel->{$i}->habitacion->infoHabitacion->valor_noreembolsable_valida,
