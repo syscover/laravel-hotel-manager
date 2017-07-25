@@ -153,9 +153,19 @@ class HotelManagerService
 
         foreach ($auxResponse as $obj)
         {
+            $restrictions = [];
+            if(isset($obj->hotel->restricciones))
+            {
+                $restrictions = (object)[
+                    'restrictionActive'     => $obj->hotel->restricciones->hay_restriccion,
+                    'restrictionDesc'       => $obj->hotel->restricciones->descripcion
+                ];
+            }
+
             $hotel = [
                 'id'    => $obj->hotel->id_hotel,
-                'rooms' => []
+                'rooms' => [],
+                'restrictions' => $restrictions
             ];
             $setCurrency = false;
 
